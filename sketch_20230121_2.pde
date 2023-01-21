@@ -26,6 +26,7 @@ class Bullet {
 
   void reset() {
     isDraw = false;
+    y = height*2;
   }
 }
 
@@ -51,14 +52,14 @@ class Enemy {
     th += 0.01;
     y += 1;
     x += cos(th);
-    fill(255,155,155);
+    fill(255, 155, 155);
     circle(x, y, r);
   }
 
   boolean onScreen() {
     return 0<=y && y<=height;
   }
-  
+
   void reset() {
     isDraw = false;
   }
@@ -79,6 +80,7 @@ void draw() {
   drawTriangle(mouseX, 400);
   drawBullet();
   drawEnemy();
+  checkHit();
 }
 
 void initPool() {
@@ -128,6 +130,22 @@ void drawEnemy() {
       enemyPool[i].draw();
     } else {
       enemyPool[i].reset();
+    }
+  }
+}
+
+void checkHit() {
+  for (int i = 0; i<enemyPool.length; i++) {
+    for (int j = 0; j<bulletPool.length; j++) {
+      float dx = enemyPool[i].x - bulletPool[j].x;
+      float dy = enemyPool[i].y - bulletPool[j].y;
+      float dist = dx*dx + dy*dy;
+      float c = (enemyPool[i].r+bulletPool[j].r) *
+        (enemyPool[i].r+bulletPool[j].r);
+
+      if (dist < c) {
+        enemyPool[i].reset();
+      }
     }
   }
 }
